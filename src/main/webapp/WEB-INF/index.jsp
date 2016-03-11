@@ -1,7 +1,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <c:set var="req" value="${pageContext.request}"/>
-<c:set var="baseURL" value="${req.getServerName()}:${req.getServerPort()}/${req.getContextPath()}"/>
+<c:set var="baseURL" value="${req.getServerName()}:${req.getServerPort()}${req.getContextPath()}"/>
+<c:set var="protocol" value="${req.protocol}"/>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -29,12 +30,27 @@
             </div>
             <div class="panel-body">
                 <ul class="nav nav-pills">
+                    <c:set var="first" value="0"/>
                     <c:forEach items="${seances}" var="seance">
-                        <li role="presentation" class="active">
-                            <a href="#">${seance}</a>
-                        </li>
+                        <c:if test="${first == 0}">
+                            <li class="active">
+                                <a href="#">${seance}</a>
+                            </li>
+                        </c:if>
+                        <c:if test="${first > 0}">
+                            <li>
+                                <a href="#">${seance}</a>
+                            </li>
+                        </c:if>
+                        <c:set var="first" value="1"/>
                     </c:forEach>
                 </ul>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <button type="button" class="btn btn-success" id="sale">Sale</button>
+                <button type="button" class="btn btn-info" id="reservation">Reservation</button>
             </div>
         </div>
     </div>
@@ -74,6 +90,16 @@
     </div>
 
 </div>
+<script>
+    var res = {
+        url: {
+            ticket: {
+                list: "//<c:out value='${baseURL}' />/ticket/list/",
+                sale: "//<c:out value='${baseURL}' />/ticket/sale/"
+            }
+        }
+    };
+</script>
 <script src="//<c:out value='${baseURL}' />/resources/js/lib/jquery-2.2.1.min.js"></script>
 <script src="//<c:out value='${baseURL}' />/resources/bootstrap-3.3.6/js/bootstrap.min.js"></script>
 <script src="//<c:out value='${baseURL}' />/resources/js/app/main.js"></script>

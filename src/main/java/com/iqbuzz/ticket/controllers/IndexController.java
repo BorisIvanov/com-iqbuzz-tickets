@@ -7,20 +7,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
 
 @Controller
 public class IndexController {
 
-    @Autowired
     private SeanceService seanceService;
+
+    @Autowired
+    public IndexController(SeanceService seanceService) {
+        this.seanceService = seanceService;
+    }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ModelAndView index() {

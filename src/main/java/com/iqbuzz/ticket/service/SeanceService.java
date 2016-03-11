@@ -14,10 +14,14 @@ import java.util.List;
 @Service
 public class SeanceService {
 
-    @Autowired
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT);
     private Environment env;
 
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT);
+    @Autowired
+    public SeanceService(Environment env){
+        this.env = env;
+
+    }
 
     public List<String> list(){
         int interval = Integer.valueOf(env.getProperty("seance.interval"));

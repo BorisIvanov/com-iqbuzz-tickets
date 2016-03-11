@@ -1,5 +1,7 @@
 package com.iqbuzz.ticket.config;
 
+import com.iqbuzz.ticket.entity.Ticket;
+import com.iqbuzz.ticket.entity.TicketReservation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,7 +34,7 @@ public class DbConfig {
     public LocalSessionFactoryBean sessionFactory() {
         LocalSessionFactoryBean localSessionFactoryBean = new LocalSessionFactoryBean();
         localSessionFactoryBean.setDataSource(dataSource());
-        //localSessionFactoryBean.setAnnotatedClasses(Account.class, Token.class);
+        localSessionFactoryBean.setAnnotatedClasses(Ticket.class, TicketReservation.class);
         localSessionFactoryBean.setHibernateProperties(hibernateProperties());
         return localSessionFactoryBean;
     }
