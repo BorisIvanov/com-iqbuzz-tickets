@@ -1,14 +1,5 @@
-/*jQuery.ajaxSetup({
- traditional: true,
- scriptCharset: "utf-8",
- dataType: "json",
- type: "POST",
- cache: false,
- error: function (XMLHttpRequest, textStatus, errorThrown) {
- }
- });*/
-
 $.postJSON = function (url, data, callback) {
+    lockUI();
     return jQuery.ajax({
         headers: {
             "Content-Type": "application/json"
@@ -17,10 +8,28 @@ $.postJSON = function (url, data, callback) {
         url: url,
         data: JSON.stringify(data),
         dataType: "json",
-        success: callback,
+        success: function (response) {
+            if (response.error) {
+                $(".modal-body p").text(response.error);
+                $("#modal").modal("show");
+            } else {
+                callback(response);
+            }
+            unlockUI();
+        },
         error: unlockUI
     });
 };
+
+function lockUI() {
+    $(".app-row button, #sale, #reservation, #person").prop("disabled", true);
+    $(".nav-pills li").off();
+}
+
+function unlockUI() {
+    $(".app-row button, #sale, #reservation, #person").prop("disabled", false);
+    $(".nav-pills li").on("click", seanceClick);
+}
 
 $(document).ready(function () {
     $(".app-row .btn-default").on("click", seatClick);
@@ -62,49 +71,46 @@ function seatClick(e) {
     } else {
         $this.data("status", "selected").addClass("btn-primary");
     }
-    //console.log(seat, row);
-}
-function lockUI() {
-    $(".app-row button, #sale, #reservation").prop("disabled", true);
-    $(".nav-pills li").off();
 }
 
-function unlockUI() {
-    $(".app-row button, #sale, #reservation").prop("disabled", false);
-    $(".nav-pills li").on("click", seanceClick);
-}
-
-
-function saleClick() {
+function getSeatSelected() {
     var seats = $(".app-row .btn-primary");
     if (seats.length == 0) {
-        return;
+        return null;
     }
-
-    lockUI();
     var seance = $(".nav-pills li.active").text().trim();
-
-    var data = [];
+    var data = {tickets:[]};
     $.each(seats, function () {
         var $this = $(this);
-        data.push({
+        data.tickets.push({
             "seat": $this.data("seat"),
             "row": $this.data("row"),
             "seance": seance
         });
     });
-
-    $.postJSON(res.url.ticket.sale, data, function (response) {
-        if (response.error) {
-            $(".modal-body p").text(response.error);
-            $("#modal").modal("show");
-        } else {
+    return data;
+}
+function saleClick() {
+    var data = getSeatSelected();
+    if (data) {
+        $.postJSON(res.url.ticket.sale, data.tickets, function () {
             $(".app-row .btn-primary").removeClass("btn-primary").addClass("btn-success");
-        }
-        unlockUI();
-    });
+        });
+    }
 }
 
 function reservationClick() {
-
+    var val = $("#person").val();
+    if (val) {
+        $(".person-group").removeClass("has-error");
+        var data = getSeatSelected();
+        if (data) {
+            data.person = val;
+            $.postJSON(res.url.ticket.reservation, data, function () {
+                $(".app-row .btn-primary").removeClass("btn-primary").addClass("btn-info");
+            });
+        }
+    } else {
+        $(".person-group").addClass("has-error");
+    }
 }

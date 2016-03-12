@@ -46,4 +46,17 @@ public class TicketController extends BaseController {
         return new HashMap<>();
     }
 
+    @RequestMapping(
+            value = "/ticket/reservation",
+            method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @ResponseBody
+    public Map<String, String> reservation(@RequestBody List<Ticket> ticketList) throws LastRowValidateException {
+        //ticketService.sale(ticketList);
+        //return new SuccessAjaxResponse();
+        return new HashMap<>();
+    }
+
 }

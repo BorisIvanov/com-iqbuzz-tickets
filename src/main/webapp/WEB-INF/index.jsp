@@ -16,79 +16,101 @@
 <body>
 <div class="container">
     <div class="row">
-        <div class="page-header">
-            <h1>Sale of tickets
-                <small>and ticket reservation</small>
-            </h1>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Seances</h3>
-            </div>
-            <div class="panel-body">
-                <ul class="nav nav-pills">
-                    <c:set var="first" value="0"/>
-                    <c:forEach items="${seances}" var="seance">
-                        <c:if test="${first == 0}">
-                            <li class="active">
-                                <a href="#">${seance}</a>
-                            </li>
-                        </c:if>
-                        <c:if test="${first > 0}">
-                            <li>
-                                <a href="#">${seance}</a>
-                            </li>
-                        </c:if>
-                        <c:set var="first" value="1"/>
-                    </c:forEach>
-                </ul>
-            </div>
-        </div>
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <button type="button" class="btn btn-success" id="sale">Sale</button>
-                <button type="button" class="btn btn-info" id="reservation">Reservation</button>
+        <div class="col-md-12">
+            <div class="page-header">
+                <h1>Sale of tickets
+                    <small>and ticket reservation</small>
+                </h1>
             </div>
         </div>
     </div>
 
     <div class="row">
-        <ul class="list-group">
-            <c:forEach var="i" begin="1" end="${rows}">
-                <li class="list-group-item app-row">
-
-                    <div class="btn-group app-left">
-                        <p class="text-muted"><c:out value="${i}"/></p>
-                    </div>
-
-                    <div class="btn-group">
-                        <c:forEach var="j" begin="1" end="${seats}">
-                            <button type="button" class="btn btn-default"
-                                    data-row="<c:out value="${i}"/>"
-                                    data-seat="<c:out value="${j}"/>">
-                                <c:out value="${j}"/>
-                            </button>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Seances</h3>
+                </div>
+                <div class="panel-body">
+                    <ul class="nav nav-pills">
+                        <c:set var="first" value="0"/>
+                        <c:forEach items="${seances}" var="seance">
+                            <c:if test="${first == 0}">
+                                <li class="active">
+                                    <a href="#">${seance}</a>
+                                </li>
+                            </c:if>
+                            <c:if test="${first > 0}">
+                                <li>
+                                    <a href="#">${seance}</a>
+                                </li>
+                            </c:if>
+                            <c:set var="first" value="1"/>
                         </c:forEach>
-                    </div>
-
-                    <div class="btn-group app-right">
-                        <p class="text-muted"><c:out value="${i}"/></p>
-                    </div>
-                </li>
-            </c:forEach>
-        </ul>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="row">
-        <div class="alert alert-success" role="alert"></div>
-        <div class="alert alert-info" role="alert"></div>
-        <div class="alert alert-warning" role="alert"></div>
-        <div class="alert alert-danger" role="alert"></div>
+        <div class="col-md-2">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <button type="button" class="btn btn-success" id="sale">Sale</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-10">
+            <div class="panel panel-default">
+                <div class="panel-body">
+
+                    <div class="form-group">
+                        <div class="col-sm-5">
+                            <div class="input-group person-group">
+                                <span class="input-group-addon">Person</span>
+                                <input type="text" class="form-control" id="person">
+                            </div>
+                        </div>
+                        <div class="col-sm-5">
+                            <div class="input-group">
+                                <button type="button" class="btn btn-info" id="reservation">Reservation</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
+    <div class="row">
+        <div class="col-md-12">
+            <ul class="list-group">
+                <c:forEach var="i" begin="1" end="${rows}">
+                    <li class="list-group-item app-row">
+
+                        <div class="btn-group app-left">
+                            <p class="text-muted"><c:out value="${i}"/></p>
+                        </div>
+
+                        <div class="btn-group">
+                            <c:forEach var="j" begin="1" end="${seats}">
+                                <button type="button" class="btn btn-default"
+                                        data-row="<c:out value="${i}"/>"
+                                        data-seat="<c:out value="${j}"/>">
+                                    <c:out value="${j}"/>
+                                </button>
+                            </c:forEach>
+                        </div>
+
+                        <div class="btn-group app-right">
+                            <p class="text-muted"><c:out value="${i}"/></p>
+                        </div>
+                    </li>
+                </c:forEach>
+            </ul>
+        </div>
+    </div>
 </div>
 <div class="modal fade" tabindex="-1" role="dialog" id="modal">
     <div class="modal-dialog">
@@ -110,7 +132,8 @@
         url: {
             ticket: {
                 list: "//<c:out value='${baseURL}' />/ticket/list/",
-                sale: "//<c:out value='${baseURL}' />/ticket/sale/"
+                sale: "//<c:out value='${baseURL}' />/ticket/sale/",
+                reservation: "//<c:out value='${baseURL}' />/ticket/reservation/"
             }
         }
     };
