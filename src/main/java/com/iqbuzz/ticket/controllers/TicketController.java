@@ -2,6 +2,7 @@ package com.iqbuzz.ticket.controllers;
 
 import com.iqbuzz.ticket.dto.SuccessAjaxResponse;
 import com.iqbuzz.ticket.dto.Ticket;
+import com.iqbuzz.ticket.exception.LastRowValidateException;
 import com.iqbuzz.ticket.service.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -17,18 +18,18 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-public class TicketController {
+public class TicketController extends BaseController {
 
     private TicketService ticketService;
 
     @Autowired
-    public TicketController(TicketService ticketService){
+    public TicketController(TicketService ticketService) {
         this.ticketService = ticketService;
     }
 
     @RequestMapping(value = "/ticket/list/{seance}", method = RequestMethod.GET)
     @ResponseBody
-    public List list(@PathVariable("seance") String seance){
+    public List list(@PathVariable("seance") String seance) {
         return ticketService.list(seance);
     }
 
@@ -39,7 +40,7 @@ public class TicketController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseBody
-    public Map<String, String> sale(@RequestBody List<Ticket> ticketList){
+    public Map<String, String> sale(@RequestBody List<Ticket> ticketList) throws LastRowValidateException {
         ticketService.sale(ticketList);
         //return new SuccessAjaxResponse();
         return new HashMap<>();

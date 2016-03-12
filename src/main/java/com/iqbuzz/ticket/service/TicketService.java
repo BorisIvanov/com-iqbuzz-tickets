@@ -1,6 +1,7 @@
 package com.iqbuzz.ticket.service;
 
 import com.iqbuzz.ticket.entity.Ticket;
+import com.iqbuzz.ticket.exception.LastRowValidateException;
 import com.iqbuzz.ticket.repository.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -25,7 +26,8 @@ public class TicketService {
         return this.ticketRepository.list(seance);
     }
 
-    public void sale(List<com.iqbuzz.ticket.dto.Ticket> ticketList) {
+    public void sale(List<com.iqbuzz.ticket.dto.Ticket> ticketList) throws LastRowValidateException {
+        validateLastRow(ticketList);
         List<Ticket> ticketEntityList = new ArrayList<>();
         for (com.iqbuzz.ticket.dto.Ticket ticketDto : ticketList) {
             Ticket ticket = new Ticket();
@@ -38,7 +40,7 @@ public class TicketService {
     }
 
 
-    public boolean validateLastRow(List<com.iqbuzz.ticket.dto.Ticket> ticketList) {
+    public void validateLastRow(List<com.iqbuzz.ticket.dto.Ticket> ticketList) throws LastRowValidateException {
         int seatCountInRow = Integer.valueOf(env.getProperty("seat.count"));
         int rowCount = Integer.valueOf(env.getProperty("row.count"));
         boolean[] lastRow = new boolean[seatCountInRow];
@@ -50,10 +52,9 @@ public class TicketService {
 
         for (int i = 0; i < seatCountInRow; i += 2) {
             if ((lastRow[i] | lastRow[i + 1]) && !((lastRow[i] & lastRow[i + 1]))){
-                break;
+                throw new LastRowValidateException();
             }
         }
-        return false;
     }
 
 }

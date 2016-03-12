@@ -1,12 +1,12 @@
 /*jQuery.ajaxSetup({
-    traditional: true,
-    scriptCharset: "utf-8",
-    dataType: "json",
-    type: "POST",
-    cache: false,
-    error: function (XMLHttpRequest, textStatus, errorThrown) {
-    }
-});*/
+ traditional: true,
+ scriptCharset: "utf-8",
+ dataType: "json",
+ type: "POST",
+ cache: false,
+ error: function (XMLHttpRequest, textStatus, errorThrown) {
+ }
+ });*/
 
 $.postJSON = function (url, data, callback) {
     return jQuery.ajax({
@@ -75,7 +75,6 @@ function unlockUI() {
 }
 
 
-
 function saleClick() {
     var seats = $(".app-row .btn-primary");
     if (seats.length == 0) {
@@ -96,7 +95,12 @@ function saleClick() {
     });
 
     $.postJSON(res.url.ticket.sale, data, function (response) {
-        $(".app-row .btn-primary").removeClass("btn-primary").addClass("btn-success");
+        if (response.error) {
+            $(".modal-body p").text(response.error);
+            $("#modal").modal("show");
+        } else {
+            $(".app-row .btn-primary").removeClass("btn-primary").addClass("btn-success");
+        }
         unlockUI();
     });
 }
