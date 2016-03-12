@@ -1,4 +1,4 @@
-jQuery.ajaxSetup({
+/*jQuery.ajaxSetup({
     traditional: true,
     scriptCharset: "utf-8",
     dataType: "json",
@@ -6,21 +6,45 @@ jQuery.ajaxSetup({
     cache: false,
     error: function (XMLHttpRequest, textStatus, errorThrown) {
     }
-});
+});*/
+
+$.postJSON = function (url, data, callback) {
+    return jQuery.ajax({
+        headers: {
+            "Content-Type": "application/json"
+        },
+        type: "POST",
+        url: url,
+        data: JSON.stringify(data),
+        dataType: "json",
+        success: callback,
+        error: unlockUI
+    });
+};
+
 $(document).ready(function () {
     $(".app-row .btn-default").on("click", seatClick);
     $(".nav-pills li").on("click", seanceClick);
     $("#sale").on("click", saleClick);
     $("#reservation").on("click", reservationClick);
+    seanceGet();
 });
 
 function seanceClick() {
-    lockUI();
     $(".nav-pills li").removeClass("active");
-    $(".app-row button").prop("disabled", true).removeClass("btn-primary");
-    var $this = $(this);
-    $this.addClass("active");
-    seanceGet($this.text().trim())
+    $(".app-row button").prop("disabled", true).removeClass("btn-primary, btn-success");
+    $(this).addClass("active");
+    seanceGet();
+}
+
+function seanceGet() {
+    lockUI();
+    $.get(res.url.ticket.list + $(".nav-pills li.active").text().trim(), function (response) {
+        for (var i = 0; i < response.length; i++) {
+            $("button[data-row='" + response[i].row + "'][data-seat='" + response[i].seat + "']").addClass("btn-success");
+        }
+        unlockUI();
+    });
 }
 
 function seatClick(e) {
@@ -50,27 +74,7 @@ function unlockUI() {
     $(".nav-pills li").on("click", seanceClick);
 }
 
-function seanceGet(seanceTime) {
-    $.get(res.url.ticket.list + seanceTime, function (response) {
-        for (var i = 0; i < response.length; i++) {
-            $("button[data-row='" + response[i].row + "'][data-seat='" + response[i].seat + "']").addClass("btn-success");
-        }
-        unlockUI();
-    });
-}
 
-$.postJSON = function (url, data, callback) {
-    return jQuery.ajax({
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        type: 'POST',
-        url: url,
-        data: JSON.stringify(data),
-        dataType: 'json',
-        success: callback
-    });
-};
 
 function saleClick() {
     var seats = $(".app-row .btn-primary");
