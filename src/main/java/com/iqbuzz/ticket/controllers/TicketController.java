@@ -1,7 +1,8 @@
 package com.iqbuzz.ticket.controllers;
 
-import com.iqbuzz.ticket.dto.SuccessAjaxResponse;
 import com.iqbuzz.ticket.dto.Ticket;
+import com.iqbuzz.ticket.dto.TicketReservation;
+import com.iqbuzz.ticket.dto.TicketReservationRequest;
 import com.iqbuzz.ticket.exception.LastRowValidateException;
 import com.iqbuzz.ticket.service.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,6 @@ public class TicketController extends BaseController {
     @ResponseBody
     public Map<String, String> sale(@RequestBody List<Ticket> ticketList) throws LastRowValidateException {
         ticketService.sale(ticketList);
-        //return new SuccessAjaxResponse();
         return new HashMap<>();
     }
 
@@ -53,9 +53,31 @@ public class TicketController extends BaseController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseBody
-    public Map<String, String> reservation(@RequestBody List<Ticket> ticketList) throws LastRowValidateException {
-        //ticketService.sale(ticketList);
-        //return new SuccessAjaxResponse();
+    public Map<String, String> reservation(@RequestBody TicketReservation ticketReservation)
+            throws LastRowValidateException {
+        ticketService.reservation(ticketReservation);
+        return new HashMap<>();
+    }
+
+    @RequestMapping(
+            value = "/ticket/reservation/{person}",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @ResponseBody
+    public List reservationByPerson(@PathVariable("person") String person) {
+        return ticketService.reservationByPerson(person);
+    }
+
+    @RequestMapping(
+            value = "/ticket/reservation/sale",
+            method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @ResponseBody
+    public Map<String, String> reservationSale(@RequestBody TicketReservationRequest request) {
+        ticketService.reservationSale(request.getPerson(), request.getSeance());
         return new HashMap<>();
     }
 

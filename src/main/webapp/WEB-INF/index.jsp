@@ -19,7 +19,7 @@
         <div class="col-md-12">
             <div class="page-header">
                 <h1>Sale of tickets
-                    <small>and ticket reservation</small>
+                    <small>and reservation</small>
                 </h1>
             </div>
         </div>
@@ -75,6 +75,8 @@
                         <div class="col-sm-5">
                             <div class="input-group">
                                 <button type="button" class="btn btn-info" id="reservation">Reservation</button>
+                                <button type="button" class="btn btn-default" id="find-reservation">Find reservation
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -111,34 +113,75 @@
             </ul>
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-md-12" id="reservation-info">
+        </div>
+    </div>
+
+    <div class="modal fade" tabindex="-1" role="dialog" id="modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="alert alert-danger alert-dismissible fade in" role="alert">
+                        <h4>Error!</h4>
+                        <p></p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
 </div>
-<div class="modal fade" tabindex="-1" role="dialog" id="modal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-body">
-                <div class="alert alert-danger alert-dismissible fade in" role="alert">
-                    <h4>Error!</h4>
-                    <p></p>
+<script id="reservation-info-template" type="text/x-handlebars-template">
+    <div class="panel panel-info">
+        <div class="panel-heading">Ticket reservations by <b>{{person}}</b></div>
+        <div class="panel-body">
+            {{#each seances}}
+            <div class="row" data-seance="{{seance}}" data-person="{{../person}}">
+                <div class="col-md-2">
+                    Seance: {{seance}}
+                </div>
+                <div class="col-md-8">
+                    {{#each tickets}}
+                    <button data-seat="1" data-row="2" class="btn btn-info" type="button">
+                        {{row}} - {{seat}}
+                    </button>
+                    {{/each}}
+                </div>
+                <div class="col-md-2" id="reservation-sale">
+                    <button data-seat="1" data-row="2" class="btn btn-success" type="button"
+                            data-seance="{{seance}}" data-person="{{../person}}">
+                        Sale
+                    </button>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <div class="row">
+                <div class="col-md-12">
+                    &nbsp;
+                </div>
             </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+            {{/each}}
+        </div>
+    </div>
+</script>
 <script>
     var res = {
         url: {
             ticket: {
                 list: "//<c:out value='${baseURL}' />/ticket/list/",
                 sale: "//<c:out value='${baseURL}' />/ticket/sale/",
-                reservation: "//<c:out value='${baseURL}' />/ticket/reservation/"
+                reservation: "//<c:out value='${baseURL}' />/ticket/reservation/",
+                reservation_sale:"//<c:out value='${baseURL}' />/ticket/reservation/sale"
             }
         }
     };
 </script>
 <script src="//<c:out value='${baseURL}' />/resources/js/lib/jquery-2.2.1.min.js"></script>
+<script src="//<c:out value='${baseURL}' />/resources/js/lib/handlebars-v4.0.5.js"></script>
 <script src="//<c:out value='${baseURL}' />/resources/bootstrap-3.3.6/js/bootstrap.min.js"></script>
 <script src="//<c:out value='${baseURL}' />/resources/js/app/main.js"></script>
 </body>

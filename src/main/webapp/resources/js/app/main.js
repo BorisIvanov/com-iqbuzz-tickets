@@ -22,12 +22,12 @@ $.postJSON = function (url, data, callback) {
 };
 
 function lockUI() {
-    $(".app-row button, #sale, #reservation, #person").prop("disabled", true);
+    $(".app-row button, #sale, #reservation, #person, #find-reservation").prop("disabled", true);
     $(".nav-pills li").off();
 }
 
 function unlockUI() {
-    $(".app-row button, #sale, #reservation, #person").prop("disabled", false);
+    $(".app-row button, #sale, #reservation, #person, #find-reservation").prop("disabled", false);
     $(".nav-pills li").on("click", seanceClick);
 }
 
@@ -36,12 +36,13 @@ $(document).ready(function () {
     $(".nav-pills li").on("click", seanceClick);
     $("#sale").on("click", saleClick);
     $("#reservation").on("click", reservationClick);
+    $("#find-reservation").on("click", reservationFind);
     seanceGet();
 });
 
 function seanceClick() {
     $(".nav-pills li").removeClass("active");
-    $(".app-row button").prop("disabled", true).removeClass("btn-primary, btn-success");
+    $(".app-row button").prop("disabled", true).removeClass("btn-primary btn-success btn-info");
     $(this).addClass("active");
     seanceGet();
 }
@@ -50,23 +51,19 @@ function seanceGet() {
     lockUI();
     $.get(res.url.ticket.list + $(".nav-pills li.active").text().trim(), function (response) {
         for (var i = 0; i < response.length; i++) {
-            $("button[data-row='" + response[i].row + "'][data-seat='" + response[i].seat + "']").addClass("btn-success");
+            $("button[data-row='" + response[i].row + "'][data-seat='" + response[i].seat + "']")
+                .addClass(response[i].type == 0 ? "btn-success" : "btn-info");
         }
         unlockUI();
     });
 }
 
-function seatClick(e) {
+function seatClick() {
     var $this = $(this);
-    var seat = $this.data("seat");
-    var row = $this.data("row");
-
     var status = $this.data("status");
     if (status) {
         if (status == "selected") {
             $this.data("status", "").removeClass("btn-primary");
-        } else {
-
         }
     } else {
         $this.data("status", "selected").addClass("btn-primary");
@@ -79,10 +76,10 @@ function getSeatSelected() {
         return null;
     }
     var seance = $(".nav-pills li.active").text().trim();
-    var data = {tickets:[]};
+    var data = {ticketList: []};
     $.each(seats, function () {
         var $this = $(this);
-        data.tickets.push({
+        data.ticketList.push({
             "seat": $this.data("seat"),
             "row": $this.data("row"),
             "seance": seance
@@ -93,24 +90,65 @@ function getSeatSelected() {
 function saleClick() {
     var data = getSeatSelected();
     if (data) {
-        $.postJSON(res.url.ticket.sale, data.tickets, function () {
+        $.postJSON(res.url.ticket.sale, data.ticketList, function () {
             $(".app-row .btn-primary").removeClass("btn-primary").addClass("btn-success");
         });
     }
 }
 
-function reservationClick() {
-    var val = $("#person").val();
+function getPerson() {
+    var val = $("#person").val().trim();
     if (val) {
         $(".person-group").removeClass("has-error");
+    } else {
+        $(".person-group").addClass("has-error");
+    }
+    return val;
+}
+
+function reservationClick() {
+    var val = getPerson();
+    if (val) {
         var data = getSeatSelected();
         if (data) {
             data.person = val;
             $.postJSON(res.url.ticket.reservation, data, function () {
                 $(".app-row .btn-primary").removeClass("btn-primary").addClass("btn-info");
+                $("#person").val("");
             });
         }
-    } else {
-        $(".person-group").addClass("has-error");
     }
+}
+
+function reservationFind() {
+    var person = getPerson();
+    if (person) {
+        lockUI();
+        $.get(res.url.ticket.reservation + person, function (response) {
+            var data = {person: person, seances: []};
+            var seanceItem = {seance: "", tickets: []};
+            for (var i = 0; i < response.length; i++) {
+                var item = response[i];
+                if (seanceItem.seance == item.seance) {
+                    seanceItem.tickets.push({seat: item.seat, row: item.row});
+                } else {
+                    seanceItem = {seance: item.seance, tickets: [{seat: item.seat, row: item.row}]};
+                    data.seances.push(seanceItem);
+                }
+            }
+            var template = Handlebars.compile($("#reservation-info-template").html());
+            $("#reservation-info").append(template(data));
+            $("#reservation-sale button").on("click", reservationSale);
+            unlockUI();
+        });
+    }
+}
+
+function reservationSale() {
+    var seance = $(this).data("seance");
+    var person = $(this).data("person");
+    //console.log(person, seance);
+    $.postJSON(res.url.ticket.reservation_sale, {person: person, seance: seance}, function () {
+        $("div.row[data-person='" + person + "'][data-seance='" + seance + "']").remove();
+    });
 }

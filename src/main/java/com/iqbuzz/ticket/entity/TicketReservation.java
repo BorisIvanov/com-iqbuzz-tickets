@@ -11,16 +11,17 @@ import java.util.Set;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
-@Table( name = "ticket_reservation" )
-public class TicketReservation {
-    @Id
-    @GeneratedValue(strategy = IDENTITY)
-    private Long id;
+@Table(name = "ticket_reservation")
+public class TicketReservation extends TicketBase {
 
-    @Column(name = "name")
-    private String name;
-/*
-    @OneToMany(mappedBy="ticket")
-    private Set<Ticket> tickets;*/
+    @Column(name = "person", nullable = false)
+    private String person;
 
+    public String getPerson() {
+        return person;
+    }
+
+    public void setPerson(String person) {
+        this.person = person;
+    }
 }
