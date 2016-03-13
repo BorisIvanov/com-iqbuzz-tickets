@@ -2,12 +2,16 @@ package com.iqbuzz.ticket.repository.impl;
 
 import com.iqbuzz.ticket.dto.TicketResponse;
 import com.iqbuzz.ticket.entity.TicketBase;
+import com.iqbuzz.ticket.entity.TicketReservation;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalTime;
 import java.util.List;
 
 @Repository
@@ -21,7 +25,7 @@ public class TicketRepository implements com.iqbuzz.ticket.repository.TicketRepo
     }
 
     @Override
-    public List ticketList(String seance) {
+    public List ticketList(LocalTime seance) {
         try (Session session = sessionFactory.openSession()) {
             return session.createSQLQuery(
                     "SELECT t.row as \"row\", t.seat as \"seat\", 0 as \"type\" " +
@@ -72,15 +76,30 @@ public class TicketRepository implements com.iqbuzz.ticket.repository.TicketRepo
     @Override
     public List reservationByPerson(String person) {
         try (Session session = sessionFactory.openSession()) {
-            return session.createSQLQuery(
-                    "SELECT tr.person as \"person\", tr.seance as \"seance\", tr.row as \"row\", tr.seat as \"seat\" " +
-                            "FROM ticket_reservation tr " +
-                            "WHERE tr.person = :person ORDER BY tr.seance, tr.row, tr.seat"
-            ).setParameter("person", person)
-                    .setResultTransformer(Transformers.aliasToBean(com.iqbuzz.ticket.dto.TicketReservationResponse.class))
+            return session
+                    .createCriteria(TicketReservation.class)
+                    .add(Restrictions.eq("person", person))
+                    .addOrder(Order.asc("seance"))
+                    .addOrder(Order.asc("row"))
+                    .addOrder(Order.asc("seat"))
                     .list();
         }
     }
 
+/*
+    @Override
+    public void reservationClean() {
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            session
+                    .createSQLQuery("DELETE FROM ticket_reservation WHERE time < :time")
+                    .setParameter("time", LocalTime.now().minusHours(1))
+                    .executeUpdate();
+            session
+                    .createSQLQuery("SELECT DISTINCT seances FROM ticket_reservation")
+                    .list();
+            session.getTransaction().commit();
+        }
+    }*/
 
 }

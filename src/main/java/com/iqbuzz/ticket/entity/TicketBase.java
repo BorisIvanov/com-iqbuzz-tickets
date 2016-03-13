@@ -7,6 +7,8 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Table;
 
+import java.time.LocalTime;
+
 import static javax.persistence.GenerationType.IDENTITY;
 
 
@@ -16,7 +18,7 @@ public class TicketBase {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
     @Column(name = "seance", nullable = false)
-    private String seance;
+    private LocalTime seance;
     @Column(name = "row", nullable = false)
     private int row;
     @Column(name = "seat", nullable = false)
@@ -30,11 +32,11 @@ public class TicketBase {
         this.id = id;
     }
 
-    public String getSeance() {
+    public LocalTime getSeance() {
         return seance;
     }
 
-    public void setSeance(String seance) {
+    public void setSeance(LocalTime seance) {
         this.seance = seance;
     }
 

@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.time.LocalTime;
 import java.util.Set;
 
 import static javax.persistence.GenerationType.IDENTITY;
@@ -16,6 +17,12 @@ public class TicketReservation extends TicketBase {
 
     @Column(name = "person", nullable = false)
     private String person;
+    @Column(name = "time", nullable = false)
+    private LocalTime time;
+
+    public TicketReservation() {
+        this.time = LocalTime.now();
+    }
 
     public String getPerson() {
         return person;
@@ -24,4 +31,13 @@ public class TicketReservation extends TicketBase {
     public void setPerson(String person) {
         this.person = person;
     }
+
+    public LocalTime getTime() {
+        return time;
+    }
+
+    public void setTime(LocalTime time) {
+        this.time = time;
+    }
+
 }

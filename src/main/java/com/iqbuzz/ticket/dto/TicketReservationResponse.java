@@ -1,7 +1,10 @@
 package com.iqbuzz.ticket.dto;
 
-public class TicketReservationResponse extends Ticket {
+import java.time.LocalTime;
+
+public class TicketReservationResponse extends TicketBase {
     private String person;
+    private LocalTime seance;
 
     public String getPerson() {
         return person;
@@ -9,5 +12,13 @@ public class TicketReservationResponse extends Ticket {
 
     public void setPerson(String person) {
         this.person = person;
+    }
+
+    public LocalTime getSeance() {
+        return seance;
+    }
+
+    public void setSeance(LocalTime seance) {
+        this.seance = seance;
     }
 }

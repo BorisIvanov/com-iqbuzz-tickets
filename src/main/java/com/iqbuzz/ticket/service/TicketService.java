@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +20,7 @@ public class TicketService {
 
     private TicketRepository ticketRepository;
     private Environment env;
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT);
 
     @Autowired
     public TicketService(TicketRepository ticketRepository, Environment env) {
@@ -25,7 +29,8 @@ public class TicketService {
     }
 
     public List list(String seance) {
-        return this.ticketRepository.ticketList(seance);
+        //return this.ticketRepository.ticketList(seance);
+        return this.ticketRepository.ticketList(LocalTime.from(formatter.parse(seance)));
     }
 
     public void sale(List<com.iqbuzz.ticket.dto.Ticket> ticketList) throws LastRowValidateException {
@@ -35,7 +40,7 @@ public class TicketService {
             Ticket ticket = new Ticket();
             ticket.setRow(ticketDto.getRow());
             ticket.setSeat(ticketDto.getSeat());
-            ticket.setSeance(ticketDto.getSeance());
+            ticket.setSeance(LocalTime.from(formatter.parse(ticketDto.getSeance())));
             ticketEntityList.add(ticket);
         }
         this.ticketRepository.update(ticketEntityList);
@@ -48,7 +53,7 @@ public class TicketService {
             TicketReservation ticket = new TicketReservation();
             ticket.setRow(ticketDto.getRow());
             ticket.setSeat(ticketDto.getSeat());
-            ticket.setSeance(ticketDto.getSeance());
+            ticket.setSeance(LocalTime.from(formatter.parse(ticketDto.getSeance())));
             ticket.setPerson(ticketReservation.getPerson());
             ticketEntityList.add(ticket);
         }
