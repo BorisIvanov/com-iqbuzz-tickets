@@ -140,6 +140,7 @@
     <div class="panel panel-info">
         <div class="panel-heading">Ticket reservations by <b>{{person}}</b></div>
         <div class="panel-body">
+            {{#if seances.length}}
             {{#each seances}}
             <div class="row" data-seance="{{seance}}" data-person="{{../person}}">
                 <div class="col-md-2">
@@ -165,6 +166,9 @@
                 </div>
             </div>
             {{/each}}
+            {{else}}
+            <h4>Reservation not found</h4>
+            {{/if}}
         </div>
     </div>
 </script>
@@ -175,7 +179,7 @@
                 list: "//<c:out value='${baseURL}' />/ticket/list/",
                 sale: "//<c:out value='${baseURL}' />/ticket/sale/",
                 reservation: "//<c:out value='${baseURL}' />/ticket/reservation/",
-                reservation_sale:"//<c:out value='${baseURL}' />/ticket/reservation/sale"
+                reservation_sale: "//<c:out value='${baseURL}' />/ticket/reservation/sale"
             }
         }
     };

@@ -120,12 +120,14 @@ function reservationClick() {
     }
 }
 
+var reservationInfo = null;
+
 function reservationFind() {
     var person = getPerson();
     if (person) {
         lockUI();
         $.get(res.url.ticket.reservation + person, function (response) {
-            var data = {person: person, seances: []};
+            reservationInfo = {person: person, seances: []};
             var seanceItem = {seance: "", tickets: []};
             for (var i = 0; i < response.length; i++) {
                 var item = response[i];
@@ -133,22 +135,31 @@ function reservationFind() {
                     seanceItem.tickets.push({seat: item.seat, row: item.row});
                 } else {
                     seanceItem = {seance: item.seance, tickets: [{seat: item.seat, row: item.row}]};
-                    data.seances.push(seanceItem);
+                    reservationInfo.seances.push(seanceItem);
                 }
             }
-            var template = Handlebars.compile($("#reservation-info-template").html());
-            $("#reservation-info").append(template(data));
-            $("#reservation-sale button").on("click", reservationSale);
+            reservationTemplateUpdate();
             unlockUI();
         });
     }
+}
+function reservationTemplateUpdate(){
+    var template = Handlebars.compile($("#reservation-info-template").html());
+    $("#reservation-info").text("").append(template(reservationInfo));
+    $("#reservation-sale button").on("click", reservationSale);
 }
 
 function reservationSale() {
     var seance = $(this).data("seance");
     var person = $(this).data("person");
-    //console.log(person, seance);
     $.postJSON(res.url.ticket.reservation_sale, {person: person, seance: seance}, function () {
-        $("div.row[data-person='" + person + "'][data-seance='" + seance + "']").remove();
+        var seances = reservationInfo.seances;
+        for (var i = 0; i < seances.length; i++) {
+            if (seances[i].seance == seance) {
+                seances.splice(i, 1);
+                break;
+            }
+        }
+        reservationTemplateUpdate();
     });
 }
