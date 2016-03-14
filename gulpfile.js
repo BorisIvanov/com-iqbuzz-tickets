@@ -16,6 +16,7 @@ gulp.task("default", function () {
 
     gulp.src([
             "src/main/webapp/resources/js/lib/jquery-2.2.1.min.js",
+            "src/main/webapp/resources/js/lib/jquery.cookie.js",
             "src/main/webapp/resources/js/lib/handlebars-v4.0.5.js",
             "src/main/webapp/resources/bootstrap-3.3.6/js/bootstrap.min.js",
             "src/main/webapp/resources/js/app/main.js"

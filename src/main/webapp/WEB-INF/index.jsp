@@ -40,14 +40,14 @@
                     <ul class="nav nav-pills">
                         <c:set var="first" value="0"/>
                         <c:forEach items="${seances}" var="seance">
-                            <c:if test="${first == 0}">
+                            <c:if test="${seance == seanceActive}">
                                 <li class="active">
-                                    <a href="#">${seance}</a>
+                                    <a href="#${seance}">${seance}</a>
                                 </li>
                             </c:if>
-                            <c:if test="${first > 0}">
+                            <c:if test="${seance != seanceActive}">
                                 <li>
-                                    <a href="#">${seance}</a>
+                                    <a href="#${seance}">${seance}</a>
                                 </li>
                             </c:if>
                             <c:set var="first" value="1"/>
@@ -62,7 +62,7 @@
         <div class="col-md-2">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <div class="input-group person-group">
+                    <div class="input-group">
                         <span class="input-group-addon">Sum</span>
                         <input type="text" class="form-control" id="costSum" readonly>
                     </div>
@@ -170,7 +170,7 @@
                     {{/each}}
                 </div>
                 <div class="col-md-2">
-                    <div class="input-group person-group">
+                    <div class="input-group">
                         <span class="input-group-addon">Sum</span>
                         <input type="text" class="form-control" value="{{cost}}" readonly>
                     </div>
@@ -211,6 +211,7 @@
 </c:if>
 <c:if test="${environment != 'PRODUCTION'}">
     <script src="//<c:out value='${baseURL}' />/resources/js/lib/jquery-2.2.1.min.js"></script>
+    <script src="//<c:out value='${baseURL}' />/resources/js/lib/jquery.cookie.js"></script>
     <script src="//<c:out value='${baseURL}' />/resources/js/lib/handlebars-v4.0.5.js"></script>
     <script src="//<c:out value='${baseURL}' />/resources/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script src="//<c:out value='${baseURL}' />/resources/js/app/main.js"></script>

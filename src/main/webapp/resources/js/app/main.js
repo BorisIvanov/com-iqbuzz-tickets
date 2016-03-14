@@ -50,6 +50,7 @@ $(document).ready(function () {
 function seanceClick() {
     $(".nav-pills li").removeClass("active");
     $(this).addClass("active");
+    $.cookie("activeSeance", $("a", this).text());
     seanceGet();
 }
 
