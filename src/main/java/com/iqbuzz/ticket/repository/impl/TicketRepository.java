@@ -96,8 +96,8 @@ public class TicketRepository implements com.iqbuzz.ticket.repository.TicketRepo
                     .setParameter("time", LocalTime.now().minusHours(1))
                     .executeUpdate();
             session
-                    .createSQLQuery("DELETE FROM ticket_reservation WHERE seance > :time")
-                    .setParameter("time", LocalTime.now().minusMinutes(30))
+                    .createSQLQuery("DELETE FROM ticket_reservation WHERE seance < :time")
+                    .setParameter("time", LocalTime.now().plusMinutes(30))
                     .executeUpdate();
             session.getTransaction().commit();
         }
