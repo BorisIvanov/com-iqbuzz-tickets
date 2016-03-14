@@ -1,6 +1,5 @@
 package com.iqbuzz.ticket.service;
 
-import com.iqbuzz.ticket.dto.TicketResponse;
 import com.iqbuzz.ticket.entity.Ticket;
 import com.iqbuzz.ticket.entity.TicketReservation;
 import com.iqbuzz.ticket.exception.LastRowValidateException;
@@ -29,7 +28,6 @@ public class TicketService {
     }
 
     public List list(String seance) {
-        //return this.ticketRepository.ticketList(seance);
         return this.ticketRepository.ticketList(LocalTime.from(formatter.parse(seance)));
     }
 

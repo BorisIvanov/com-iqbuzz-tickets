@@ -2,6 +2,7 @@ package com.iqbuzz.ticket.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -54,6 +55,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         result.setAnnotationIntrospector(jacksonAnnIntrospector());
         result.getSerializationConfig().withInsertedAnnotationIntrospector(jacksonAnnIntrospector());
         result.getDeserializationConfig().withInsertedAnnotationIntrospector(jacksonAnnIntrospector());
+        result.registerModule(new JavaTimeModule());
         return result;
     }
 

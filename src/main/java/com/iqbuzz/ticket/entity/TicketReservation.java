@@ -1,15 +1,12 @@
 package com.iqbuzz.ticket.entity;
 
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.time.LocalTime;
-import java.util.Set;
-
-import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
 @Table(name = "ticket_reservation")
@@ -17,11 +14,12 @@ public class TicketReservation extends TicketBase {
 
     @Column(name = "person", nullable = false)
     private String person;
-    @Column(name = "time", nullable = false)
-    private LocalTime time;
+    @JsonIgnore
+    @Column(name = "reservation_time", nullable = false)
+    private LocalTime reservationTime;
 
-    public TicketReservation() {
-        this.time = LocalTime.now();
+    public TicketReservation(){
+        reservationTime = LocalTime.now();
     }
 
     public String getPerson() {
@@ -32,12 +30,11 @@ public class TicketReservation extends TicketBase {
         this.person = person;
     }
 
-    public LocalTime getTime() {
-        return time;
+    public LocalTime getReservationTime() {
+        return reservationTime;
     }
 
-    public void setTime(LocalTime time) {
-        this.time = time;
+    public void setReservationTime(LocalTime reservationTime) {
+        this.reservationTime = reservationTime;
     }
-
 }

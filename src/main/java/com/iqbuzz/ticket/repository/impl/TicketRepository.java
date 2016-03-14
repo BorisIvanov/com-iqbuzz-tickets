@@ -86,20 +86,21 @@ public class TicketRepository implements com.iqbuzz.ticket.repository.TicketRepo
         }
     }
 
-/*
+
     @Override
     public void reservationClean() {
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
             session
-                    .createSQLQuery("DELETE FROM ticket_reservation WHERE time < :time")
+                    .createSQLQuery("DELETE FROM ticket_reservation WHERE reservation_time < :time")
                     .setParameter("time", LocalTime.now().minusHours(1))
                     .executeUpdate();
             session
-                    .createSQLQuery("SELECT DISTINCT seances FROM ticket_reservation")
-                    .list();
+                    .createSQLQuery("DELETE FROM ticket_reservation WHERE seance > :time")
+                    .setParameter("time", LocalTime.now().minusMinutes(30))
+                    .executeUpdate();
             session.getTransaction().commit();
         }
-    }*/
+    }
 
 }

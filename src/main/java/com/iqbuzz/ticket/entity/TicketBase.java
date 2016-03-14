@@ -1,11 +1,12 @@
 package com.iqbuzz.ticket.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
-import javax.persistence.Table;
+
 
 import java.time.LocalTime;
 
@@ -17,6 +18,7 @@ public class TicketBase {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
     @Column(name = "seance", nullable = false)
     private LocalTime seance;
     @Column(name = "row", nullable = false)

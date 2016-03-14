@@ -30,7 +30,8 @@ function unlockUI() {
     $(".app-row button, #sale, #reservation, #person, #find-reservation").prop("disabled", false);
     $(".nav-pills li").on("click", seanceClick);
 }
-
+var refreshTimeoutDelay = 60 * 1000;
+//var refreshTimeout = null;
 $(document).ready(function () {
     $(".app-row .btn-default").on("click", seatClick);
     $(".nav-pills li").on("click", seanceClick);
@@ -38,17 +39,18 @@ $(document).ready(function () {
     $("#reservation").on("click", reservationClick);
     $("#find-reservation").on("click", reservationFind);
     seanceGet();
+    setInterval(seanceGet, refreshTimeoutDelay);
 });
 
 function seanceClick() {
     $(".nav-pills li").removeClass("active");
-    $(".app-row button").prop("disabled", true).removeClass("btn-primary btn-success btn-info");
     $(this).addClass("active");
     seanceGet();
 }
 
 function seanceGet() {
     lockUI();
+    $(".app-row button").prop("disabled", true).removeClass("btn-primary btn-success btn-info");
     $.get(res.url.ticket.list + $(".nav-pills li.active").text().trim(), function (response) {
         for (var i = 0; i < response.length; i++) {
             $("button[data-row='" + response[i].row + "'][data-seat='" + response[i].seat + "']")
@@ -143,7 +145,7 @@ function reservationFind() {
         });
     }
 }
-function reservationTemplateUpdate(){
+function reservationTemplateUpdate() {
     var template = Handlebars.compile($("#reservation-info-template").html());
     $("#reservation-info").text("").append(template(reservationInfo));
     $("#reservation-sale button").on("click", reservationSale);
