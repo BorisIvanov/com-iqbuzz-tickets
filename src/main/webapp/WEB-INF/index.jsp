@@ -62,11 +62,21 @@
         <div class="col-md-2">
             <div class="panel panel-default">
                 <div class="panel-body">
+                    <div class="input-group person-group">
+                        <span class="input-group-addon">Sum</span>
+                        <input type="text" class="form-control" id="costSum" readonly>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="panel panel-default">
+                <div class="panel-body">
                     <button type="button" class="btn btn-success" id="sale">Sale</button>
                 </div>
             </div>
         </div>
-        <div class="col-md-10">
+        <div class="col-md-8">
             <div class="panel panel-default">
                 <div class="panel-body">
 
@@ -104,7 +114,8 @@
                             <c:forEach var="j" begin="1" end="${seats}">
                                 <button type="button" class="btn btn-default"
                                         data-row="<c:out value="${i}"/>"
-                                        data-seat="<c:out value="${j}"/>">
+                                        data-seat="<c:out value="${j}"/>"
+                                        data-cost="<c:out value="${i}"/>00">
                                     <c:out value="${j}"/>
                                 </button>
                             </c:forEach>
@@ -151,14 +162,20 @@
                 <div class="col-md-2">
                     Seance: {{seance}}
                 </div>
-                <div class="col-md-8">
+                <div class="col-md-7">
                     {{#each tickets}}
                     <button data-seat="1" data-row="2" class="btn btn-info" type="button">
                         {{row}} - {{seat}}
                     </button>
                     {{/each}}
                 </div>
-                <div class="col-md-2" id="reservation-sale">
+                <div class="col-md-2">
+                    <div class="input-group person-group">
+                        <span class="input-group-addon">Sum</span>
+                        <input type="text" class="form-control" value="{{cost}}" readonly>
+                    </div>
+                </div>
+                <div class="col-md-1" id="reservation-sale">
                     <button data-seat="1" data-row="2" class="btn btn-success" type="button"
                             data-seance="{{seance}}" data-person="{{../person}}">
                         Sale

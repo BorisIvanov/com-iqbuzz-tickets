@@ -28,11 +28,11 @@ public class TicketRepository implements com.iqbuzz.ticket.repository.TicketRepo
     public List ticketList(LocalTime seance) {
         try (Session session = sessionFactory.openSession()) {
             return session.createSQLQuery(
-                    "SELECT t.row as \"row\", t.seat as \"seat\", 0 as \"type\" " +
+                    "SELECT t.row as \"row\", t.seat as \"seat\", 0 as \"type\", t.cost as \"cost\" " +
                             "FROM ticket t " +
                             "WHERE t.seance = :seance " +
                             "UNION ALL " +
-                            "SELECT tr.row as \"row\", tr.seat as \"seat\", 1 as \"type\" " +
+                            "SELECT tr.row as \"row\", tr.seat as \"seat\", 1 as \"type\", tr.cost as \"cost\" " +
                             "FROM ticket_reservation tr " +
                             "WHERE tr.seance = :seance"
             ).setParameter("seance", seance)
@@ -53,13 +53,13 @@ public class TicketRepository implements com.iqbuzz.ticket.repository.TicketRepo
     }
 
     @Override
-    public void reservationToTicket(String person, String seance) {
+    public void reservationToTicket(String person, LocalTime seance) {
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
             session
                     .createSQLQuery(
-                            "INSERT INTO ticket (seance, row, seat) " +
-                                    "SELECT tr.seance, tr.row, tr.seat FROM ticket_reservation tr " +
+                            "INSERT INTO ticket (seance, row, seat, cost) " +
+                                    "SELECT tr.seance, tr.row, tr.seat, tr.cost FROM ticket_reservation tr " +
                                     "WHERE tr.person = :person AND tr.seance = :seance")
                     .setParameter("person", person)
                     .setParameter("seance", seance)

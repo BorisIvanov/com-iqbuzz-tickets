@@ -1,3 +1,9 @@
+var refreshTimeoutDelay = 60 * 1000;
+var costSum = 0;
+var reservationInfo = null;
+
+
+jQuery.ajaxSetup({error: unlockUI});
 $.postJSON = function (url, data, callback) {
     lockUI();
     return jQuery.ajax({
@@ -30,8 +36,7 @@ function unlockUI() {
     $(".app-row button, #sale, #reservation, #person, #find-reservation").prop("disabled", false);
     $(".nav-pills li").on("click", seanceClick);
 }
-var refreshTimeoutDelay = 60 * 1000;
-//var refreshTimeout = null;
+
 $(document).ready(function () {
     $(".app-row .btn-default").on("click", seatClick);
     $(".nav-pills li").on("click", seanceClick);
@@ -59,16 +64,25 @@ function seanceGet() {
         unlockUI();
     });
 }
-
+function costAdd(cost) {
+    costSum = costSum + parseFloat(cost);
+    $("#costSum").val(costSum);
+}
+function costReset() {
+    costSum = 0;
+    $("#costSum").val("");
+}
 function seatClick() {
     var $this = $(this);
     var status = $this.data("status");
     if (status) {
         if (status == "selected") {
             $this.data("status", "").removeClass("btn-primary");
+            costAdd($this.data("cost"));
         }
     } else {
         $this.data("status", "selected").addClass("btn-primary");
+        costAdd($this.data("cost"));
     }
 }
 
@@ -84,7 +98,8 @@ function getSeatSelected() {
         data.ticketList.push({
             "seat": $this.data("seat"),
             "row": $this.data("row"),
-            "seance": seance
+            "seance": seance,
+            "cost": $this.data("cost")
         });
     });
     return data;
@@ -94,6 +109,7 @@ function saleClick() {
     if (data) {
         $.postJSON(res.url.ticket.sale, data.ticketList, function () {
             $(".app-row .btn-primary").removeClass("btn-primary").addClass("btn-success");
+            costReset();
         });
     }
 }
@@ -117,12 +133,11 @@ function reservationClick() {
             $.postJSON(res.url.ticket.reservation, data, function () {
                 $(".app-row .btn-primary").removeClass("btn-primary").addClass("btn-info");
                 $("#person").val("");
+                costReset();
             });
         }
     }
 }
-
-var reservationInfo = null;
 
 function reservationFind() {
     var person = getPerson();
@@ -130,13 +145,14 @@ function reservationFind() {
         lockUI();
         $.get(res.url.ticket.reservation + person, function (response) {
             reservationInfo = {person: person, seances: []};
-            var seanceItem = {seance: "", tickets: []};
+            var seanceItem = {seance: "", cost: 0, tickets: []};
             for (var i = 0; i < response.length; i++) {
                 var item = response[i];
                 if (seanceItem.seance == item.seance) {
+                    seanceItem.cost = seanceItem.cost + item.cost;
                     seanceItem.tickets.push({seat: item.seat, row: item.row});
                 } else {
-                    seanceItem = {seance: item.seance, tickets: [{seat: item.seat, row: item.row}]};
+                    seanceItem = {seance: item.seance, cost: 0, tickets: [{seat: item.seat, row: item.row}]};
                     reservationInfo.seances.push(seanceItem);
                 }
             }
@@ -163,5 +179,6 @@ function reservationSale() {
             }
         }
         reservationTemplateUpdate();
+        seanceGet();
     });
 }

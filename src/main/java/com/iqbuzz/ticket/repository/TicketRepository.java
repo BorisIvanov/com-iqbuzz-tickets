@@ -12,7 +12,7 @@ public interface TicketRepository {
 
     List reservationByPerson(String person);
 
-    void reservationToTicket(String person, String seance);
+    void reservationToTicket(String person, LocalTime seance);
 
     void reservationClean();
 }

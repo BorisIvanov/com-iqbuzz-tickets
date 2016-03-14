@@ -25,6 +25,8 @@ public class TicketBase {
     private int row;
     @Column(name = "seat", nullable = false)
     private int seat;
+    @Column(name = "cost", nullable = false)
+    private float cost;
 
     public Long getId() {
         return id;
@@ -58,4 +60,11 @@ public class TicketBase {
         this.seat = seat;
     }
 
+    public float getCost() {
+        return cost;
+    }
+
+    public void setCost(float cost) {
+        this.cost = cost;
+    }
 }

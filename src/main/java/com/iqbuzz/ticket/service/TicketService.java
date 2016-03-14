@@ -38,6 +38,7 @@ public class TicketService {
             Ticket ticket = new Ticket();
             ticket.setRow(ticketDto.getRow());
             ticket.setSeat(ticketDto.getSeat());
+            ticket.setCost(ticketDto.getCost());
             ticket.setSeance(LocalTime.from(formatter.parse(ticketDto.getSeance())));
             ticketEntityList.add(ticket);
         }
@@ -51,6 +52,7 @@ public class TicketService {
             TicketReservation ticket = new TicketReservation();
             ticket.setRow(ticketDto.getRow());
             ticket.setSeat(ticketDto.getSeat());
+            ticket.setCost(ticketDto.getCost());
             ticket.setSeance(LocalTime.from(formatter.parse(ticketDto.getSeance())));
             ticket.setPerson(ticketReservation.getPerson());
             ticketEntityList.add(ticket);
@@ -80,7 +82,7 @@ public class TicketService {
     }
 
 
-    public void reservationSale(String person, String sale) {
-        this.ticketRepository.reservationToTicket(person, sale);
+    public void reservationSale(String person, LocalTime seance) {
+        this.ticketRepository.reservationToTicket(person, seance);
     }
 }
