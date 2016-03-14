@@ -10,8 +10,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Sale of tickets</title>
-    <link href="//<c:out value='${baseURL}' />/resources/bootstrap-3.3.6/css/bootstrap.min.css" rel="stylesheet">
-    <link href="//<c:out value='${baseURL}' />/resources/css/main.css" rel="stylesheet">
+    <c:if test="${environment == 'PRODUCTION'}">
+        <link href="//<c:out value='${baseURL}' />/resources/css/main.min.css" rel="stylesheet">
+    </c:if>
+    <c:if test="${environment != 'PRODUCTION'}">
+        <link href="//<c:out value='${baseURL}' />/resources/bootstrap-3.3.6/css/bootstrap.min.css" rel="stylesheet">
+        <link href="//<c:out value='${baseURL}' />/resources/css/main.css" rel="stylesheet">
+    </c:if>
 </head>
 <body>
 <div class="container">
@@ -184,9 +189,14 @@
         }
     };
 </script>
-<script src="//<c:out value='${baseURL}' />/resources/js/lib/jquery-2.2.1.min.js"></script>
-<script src="//<c:out value='${baseURL}' />/resources/js/lib/handlebars-v4.0.5.js"></script>
-<script src="//<c:out value='${baseURL}' />/resources/bootstrap-3.3.6/js/bootstrap.min.js"></script>
-<script src="//<c:out value='${baseURL}' />/resources/js/app/main.js"></script>
+<c:if test="${environment == 'PRODUCTION'}">
+    <script src="//<c:out value='${baseURL}' />/resources/js/main.min.js"></script>
+</c:if>
+<c:if test="${environment != 'PRODUCTION'}">
+    <script src="//<c:out value='${baseURL}' />/resources/js/lib/jquery-2.2.1.min.js"></script>
+    <script src="//<c:out value='${baseURL}' />/resources/js/lib/handlebars-v4.0.5.js"></script>
+    <script src="//<c:out value='${baseURL}' />/resources/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script src="//<c:out value='${baseURL}' />/resources/js/app/main.js"></script>
+</c:if>
 </body>
 </html>

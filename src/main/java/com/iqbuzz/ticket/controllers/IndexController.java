@@ -27,6 +27,7 @@ public class IndexController {
         result.addObject("rows", env.getProperty("row.count"));
         result.addObject("seats", env.getProperty("seat.count"));
         result.addObject("seances", seanceService.list());
+        result.addObject("environment", env.getProperty("application.environment"));
         return result;
     }
 
